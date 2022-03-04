@@ -19,8 +19,5 @@ jobs:
       - name: Push Code
         run: |
           ls
-          echo $GITHUB_EVENT_PATH
-          echo $GITHUB_REF
-          echo github.event.number = ${{ github.event.number  }}
-          echo github.event.pull_request.number = ${{ github.event.pull_request.number }}
-          echo github.event.issue.number = ${{ github.event.issue.number }}
+          echo "Github Ref:" $GITHUB_REF
+          echo "Github PR" ${{ github.event.pull_request.number }}
