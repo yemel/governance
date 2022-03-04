@@ -1,6 +1,7 @@
 name: Pull request build
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - master
@@ -10,65 +11,10 @@ on:
 
 jobs:
 
-  test:
+  deploy:
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: node.js 12
-        uses: actions/setup-node@v2
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-          cache: 'npm'
-
-      - name: set up git
-        run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
-
-      - name: installing
-        run: npm ci
-
-      - name: setup environment
-        run: source ./node_modules/.bin/setup-environment $PWD website-dao-dev
-
-      # TODO: enabled linters
-      # - name: linters
-      #   uses: wearerequired/lint-action@v1
-      #   with:
-      #     prettier: true
-      #     prettier_extensions: ts,tsx,js,jsx,json,md
-      #     continue_on_error: false
-
-      - name: testing
-        run: npm test
-        env:
-          DISCOURSE_API_KEY: "DISCOURSE_API_KEY"
-
-      - name: building
-        run: npm run build
-
-
-  review:
-
-    runs-on: ubuntu-20.04
-
-    needs:
-      - test
-
-    permissions:
-      pull-requests: write
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: octokit/request-action@v2.x
-        if: ${{ github.actor != '2fd' }}
-        id: assign_pr
-        with:
-          route: POST /repos/:repository/pulls/:pull_number/requested_reviewers
-          repository: ${{ github.repository }}
-          pull_number: ${{ github.event.pull_request.number }}
-          reviewers: '[ "2fd" ]'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push Code
+        run: ls
