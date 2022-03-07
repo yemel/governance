@@ -28,12 +28,12 @@ jobs:
         run: npm ci
 
       - name: setup environment
-        run: source ./node_modules/.bin/setup-environment $PWD website-dao-dev
+        run: source ./node_modules/.bin/setup-environment $PWD website-dao-stg
 
       - name: building
         run: |
-          echo $GATSBY_GOVERNANCE_API
-          npm run build      
+          GATSBY_GOVERNANCE_API="http://pr014.test.decentraland.vote/api"
+          npm run build
 
       - name: Push Code
         uses: burnett01/rsync-deployments@5.2
