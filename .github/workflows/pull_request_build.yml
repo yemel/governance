@@ -31,13 +31,15 @@ jobs:
         run: source ./node_modules/.bin/setup-environment $PWD website-dao-dev
 
       - name: building
-        run: npm run build      
+        run: |
+          echo $GATSBY_GOVERNANCE_API
+          npm run build      
 
       - name: Push Code
         uses: burnett01/rsync-deployments@5.2
         with:
           switches: -avzr --delete --exclude=".git"
-          remote_path: /root/pr013/
+          remote_path: /root/pr014/
           remote_host: test.decentraland.vote
           remote_user: root
           remote_key: ${{ secrets.DEPLOY_KEY }}
@@ -48,7 +50,5 @@ jobs:
           username: root
           host: test.decentraland.vote
           privateKey: ${{ secrets.DEPLOY_KEY }}
-          command: |
-            ls -l
-            ls ..
+          command: ./deploy.sh pr014
 
