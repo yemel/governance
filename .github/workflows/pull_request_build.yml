@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - master
+    - master
     types:
       - opened
       - synchronize
@@ -16,12 +16,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Push Code
         uses: burnett01/rsync-deployments@5.2
         with:
-          switches: -avzr --delete
-          remote_path: /root/pr011/
+          switches: -avzr --delete --exclude=".git"
+          remote_path: /root/pr012/
           remote_host: test.decentraland.vote
           remote_user: root
           remote_key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Deploy Code
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          username: root
+          host: test.decentraland.vote
+          privateKey: ${{ secrets.DEPLOY_KEY }}
+          command: ./deploy.sh pr012
 
