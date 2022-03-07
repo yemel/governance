@@ -71,6 +71,7 @@ export enum ProposalType {
   Poll = 'poll',
   Draft = 'draft',
   Governance = 'governance',
+  LinkedWearables = 'linked_wearables',
 }
 
 export enum PoiType {
@@ -87,6 +88,7 @@ export function isProposalType(value:  string | null | undefined): boolean {
     case ProposalType.Poll:
     case ProposalType.Draft:
     case ProposalType.Governance:
+    case ProposalType.LinkedWearables:
       return true
     default:
       return false
@@ -464,6 +466,7 @@ export function isProposalGrantTier(value:  string | null | undefined): boolean 
 }
 
 export const ProposalRequiredVP = {
+  [ProposalType.LinkedWearables]: requiredVotingPower(process.env.GATSBY_VOTING_POWER_TO_PASS_LINKED_WEARABLES, 0),
   [ProposalType.Grant]: requiredVotingPower(process.env.GATSBY_VOTING_POWER_TO_PASS_GRANT, 0),
   [ProposalType.Catalyst]: requiredVotingPower(process.env.GATSBY_VOTING_POWER_TO_PASS_CATALYST, 0),
   [ProposalType.BanName]: requiredVotingPower(process.env.GATSBY_VOTING_POWER_TO_PASS_BAN_NAME, 0),
@@ -579,6 +582,78 @@ export const newProposalGrantScheme = {
       type: 'string',
       minLength: 20,
       maxLength: 1500,
+    }
+  }
+}
+
+export type NewProposalLinkedWearables = {
+  name: string,
+  introduction: string,
+  nft_collections: string,
+  smart_contract: string[],
+  governance: string,
+  motivation: string,
+  managers: string[],
+  programmatically_generated: boolean,
+}
+
+export const newProposalLinkedWearablesScheme = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'name',
+    'introduction',
+    'nft_collections',
+    'smart_contract',
+    'governance',
+    'motivation',
+    'managers',
+    'programmatically_generated',
+  ],
+  properties: {
+    name: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 80,
+    },
+    introduction: {
+      type: 'string',
+      minLength: 20,
+      maxLength: 750,
+    },
+    nft_collections: {
+      type: 'string',
+      minLength: 20,
+      maxLength: 750,
+    },
+    smart_contract: {
+      type: 'array',
+      items: {
+        type: 'string',
+        format: "address",
+      },
+      minItems: 1
+    },
+    governance: {
+      type: 'string',
+      minLength: 20,
+      maxLength: 750,
+    },
+    motivation: {
+      type: 'string',
+      minLength: 20,
+      maxLength: 750,
+    },
+    managers: {
+      type: 'array',
+      items: {
+        type: 'string',
+        format: "address",
+      },
+      minItems: 1
+    },
+    programmatically_generated: {
+      type: 'boolean',
     }
   }
 }
