@@ -24,17 +24,20 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
 
-      - name: set up git
-        run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
-
       - name: Install Dependencies
         run: npm ci
+
+      - name: setup environment
+        run: source ./node_modules/.bin/setup-environment $PWD website-dao-dev
+
+      - name: building
+        run: npm run build      
 
       - name: Push Code
         uses: burnett01/rsync-deployments@5.2
         with:
           switches: -avzr --delete --exclude=".git"
-          remote_path: /root/pr012/
+          remote_path: /root/pr013/
           remote_host: test.decentraland.vote
           remote_user: root
           remote_key: ${{ secrets.DEPLOY_KEY }}
@@ -45,5 +48,7 @@ jobs:
           username: root
           host: test.decentraland.vote
           privateKey: ${{ secrets.DEPLOY_KEY }}
-          command: ./deploy.sh pr012
+          command: |
+            ls -l
+            ls ..
 
