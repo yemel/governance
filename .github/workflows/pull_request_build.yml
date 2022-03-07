@@ -19,6 +19,7 @@ jobs:
       - name: Push Code
         uses: burnett01/rsync-deployments@5.2
         with:
+          switches: -avzr --delete
           remote_path: /root/pr011/
           remote_host: test.decentraland.vote
           remote_user: root
